@@ -66,6 +66,12 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
   createStory:
     handler: src/stories.createStory
     events:

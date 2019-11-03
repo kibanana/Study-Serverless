@@ -5,4 +5,4 @@ const StorySchema = new mongoose.Schema({
   body: String
 });
 
-export const Story = mongoose.model('Story', StorySchema);
+export default global.Story = global.Story || mongoose.model('Story', StorySchema) ;
