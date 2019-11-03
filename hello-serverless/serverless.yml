@@ -20,13 +20,21 @@ service: hello-serverless
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    includeModules: true
+    packager: 'npm'
+
 provider:
   name: aws
   runtime: nodejs10.x
-
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  stage: dev
+  region: ap-northeast-2
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
