@@ -21,79 +21,87 @@ const connect = () => {
 }
 
 // C
-export const createStory = async event => {
+export const createStory = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
     const {title, body} = JSON.parse(event.body);
     connect().then(() => {
         const story = new Story({title, body});
-        return createResponse(200, JSON.stringify(story.save()));
+        return story.save();
+    }).then(story => {
+        return callback(null, createResponse(200, story));        
     }).catch((e) => {
-        return createResponse(500, e);
+        return callback(null, createResponse(500, e));
     });
 };
 
 // R
-export const readStories = async event => {
+export const readStories = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
     connect().then(() => {
-        Story.find().sort({ _id: -1 }).limit(5).lean().exec()
-        .then((stories) =>{
-            
-            if(stories) {
-                createResponse(200, stories)
-            } else {
-                createResponse(404)
-            }
+        return Story.find().sort({ _id: -1 }).limit(5).lean().exec()
+    }).then((stories) =>{
+        if(stories) {
+            return callback(null, createResponse(200, stories));
+        } else {
+            return callback(null, createResponse(404));
         }
-        );
     }).catch((e) => {
-        return createResponse(500, e);
+        return callback(null, createResponse(500, e));
     });
 };
 
 // R - single
-export const readStory = async event => {
+export const readStory = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
     connect().then(() => {
         Story.findById(event.pathParameters.id).exec()
         .then(
             story => {
                 if(story) {
-                    return createResponse(200, story);
+                    return callback(null, createResponse(200, story));
                 } else{
-                    return createResponse(404);
+                    return callback(null, createResponse(404));
                 }
             }
         )
     }).catch((e) => {
-        return createResponse(500, e);
+        return callback(null, createResponse(500, e));
     });
 };
 
 
 // U
-export const updateStory = async event => {
+export const updateStory = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
     const uStory = JSON.parse(event.body);
     connect().then(() => {
-        Story.findOneAndUpdate({_id: event.pathParameters.id }, update, {new: true}).exec()
+        Story.findOneAndUpdate({_id: event.pathParameters.id }, uStory, {new: true}).exec()
         .then((story) => {
             if(story) {
-                return createResponse(200, 'update');
+                return callback(null, createResponse(200, 'update'));
             } else {
-                return createResponse(404);
+                return callback(null, createResponse(404));
             }
         });
     }).catch((e) => {
-        return createResponse(500, e);
+        return callback(null, createResponse(500, e));
     });
 };
 
 // D
-export const deleteStory = async event => {
+export const deleteStory = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
     connect().then(() => {
-        Story.remove({ _id: event.pathParameter.id}).exec()
-        .then(() => {
-            createResponse(204, null);
-        })
+        Story.remove({ _id: event.pathParameters.id }).exec()
+    }).then(() => {
+        return callback(null, createResponse(204, null));
     }).catch((e) => {
-        return createResponse(500, e);
+        return callback(null, createResponse(500, e));
     });
 };
 
