@@ -1,7 +1,6 @@
-import * as mongoose from "mongoose";
-// 일반 Node.js 에서 mongoose를 사용할 때와 다르게
-// 함수를 호출할 때마다 connection을 만드어주어야 한다
-// => 이건 MongoDB의 저장된 접속정보를 재활용하는 방법으로 상쇄시킬 수 있는 단점이다
+import * as mongoose from 'mongoose'
+// Node.js에서 일반적으로 mongoose를 사용할 때와는 다르게, 함수를 호출할 때마다 커넥션을 만들어야 한다.
+// -> 이건 MongoDB에서 저장된 접속정보를 재활용하는 방법으로 상쇄시킬 수 있는 단점이다.
 
 import Story from './model/Story';
 
@@ -10,8 +9,7 @@ const connect = () => {
     if(connection && mongoose.connection.readyState === 1) {
         return Promise.resolve(connection);
     } else {
-        // mongodb 주소는 꼭 어딘가에 올려져있는 주소가 필요하다
-        // local로는 접근할 수 없으므로
+        // 클라우드에서는 로컬 주소 내부에 접근할 수 없으므로 꼭 리모트 주소가 필요하다.
         return mongoose.connect('mongodb+srv://dbUser:yewon0630*@cluster0-zudbr.mongodb.net/test?retryWrites=true&w=majority')
         .then((conn) => {
             connection = conn;
@@ -20,7 +18,7 @@ const connect = () => {
     }
 }
 
-// C
+// Create
 export const createStory = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
@@ -35,7 +33,7 @@ export const createStory = (event, context, callback) => {
     });
 };
 
-// R
+// Read List
 export const readStories = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
@@ -52,7 +50,7 @@ export const readStories = (event, context, callback) => {
     });
 };
 
-// R - single
+// Read Item
 export const readStory = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
@@ -73,7 +71,7 @@ export const readStory = (event, context, callback) => {
 };
 
 
-// U
+// Update
 export const updateStory = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
@@ -92,7 +90,7 @@ export const updateStory = (event, context, callback) => {
     });
 };
 
-// D
+// Delete
 export const deleteStory = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 

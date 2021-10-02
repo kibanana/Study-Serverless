@@ -3,12 +3,10 @@ const slsw = require('serverless-webpack')
 const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
-  // entry를 따로 설정하지 않아도 됨
-  entry: slsw.lib.entries,
+  entry: slsw.lib.entries, // entry를 따로 설정하지 않아도 된다.
   target: 'node',
   mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
-  // webpack의 critical warning 메시지를 피하기 위한 용도
-  externals: [nodeExternals()],
+  externals: [nodeExternals()], // webpack의 critical warning 메시지를 피하기 위한 용도
   resolve: {
     modules: [path.resolve('./src'), 'node_modules'] // src 디렉토리 내부에서 absolute import를 사용하기 위한 용도
   },
